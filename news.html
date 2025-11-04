@@ -41,11 +41,72 @@
       .nav-link:hover {
         background-color: #083c6c;
       }
+      /* *** CSS ថ្មីសម្រាប់ Dropdown និង Nested Dropdown *** */
+      .nav-item-wrapper {
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .nav-item-wrapper > .nav-link {
+        border-right: none;
+      }
       .active-nav {
         background-color: #083c6c;
         border-bottom: 3px solid #fbc02d;
         padding-bottom: 11px;
       }
+
+      /* Custom Styles for Dropdown */
+      .nav-dropdown {
+        position: absolute;
+        top: 100%; /* Position right below the nav link */
+        left: 0;
+        min-width: 200px;
+        background-color: #083c6c; /* Darker blue background */
+        z-index: 10;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        display: none; /* Hidden by default, shown on hover via group-hover:block */
+      }
+      .nav-dropdown a {
+        padding: 10px 20px;
+        color: white;
+        display: block;
+        white-space: nowrap;
+        transition: background-color 0.2s ease;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        font-weight: 400;
+      }
+      .nav-dropdown a:hover {
+        background-color: #0d47a1; /* Hover effect */
+        color: #fbc02d; /* Yellow hover text */
+      }
+
+      /* Nested Dropdown Styles */
+      /* ធាតុរុំសម្រាប់ម៉ឺនុយរង ត្រូវតែជា relative group */
+      .nav-dropdown-item-parent {
+        position: relative;
+      }
+      /* ម៉ឺនុយរងទម្លាក់ចុះខាងស្តាំ */
+      .nav-sub-dropdown {
+        position: absolute;
+        top: 0; /* Align with the parent item */
+        left: 100%; /* Position to the right of the parent item */
+        min-width: 200px;
+        background-color: #0d47a1; /* Even darker blue background for nested menu */
+        z-index: 20; /* Higher z-index than main dropdown */
+        box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.1);
+        display: none; /* Hidden by default, shown on hover */
+      }
+      /* Hover state for nested parent to show submenu */
+      .nav-dropdown-item-parent:hover > .nav-sub-dropdown {
+        display: block;
+      }
+      /* Hover state for nested item links */
+      .nav-sub-dropdown a:hover {
+        background-color: #083c6c;
+        color: #fbc02d;
+      }
+      /* End Nested Dropdown Styles */
+      /* *** បញ្ចប់ CSS ថ្មី *** */
+
       .footer-bg {
         background-color: #263238;
         color: #cfd8dc;
@@ -116,12 +177,56 @@
         </div>
       </header>
 
-      <!-- Navigation -->
+      <!-- Navigation Nested Dropdown (បានជំនួសពីកូដទីមួយ) -->
       <nav class="header-bg shadow-lg">
         <div class="flex text-sm">
           <a href="index.html" class="nav-link">ទំព័រដើម</a>
-          <a href="about.html" class="nav-link">អំពីយើង</a>
-          <a href="news.html" class="nav-link active-nav">ព័ត៌មាន</a>
+
+          <!-- Dropdown for អំពីយើង (About Us) -->
+          <div class="relative group nav-item-wrapper">
+            <a href="about.html" class="nav-link flex items-center space-x-1">
+              <span>អំពីយើង</span>
+              <i class="fas fa-chevron-down text-xs ml-1"></i>
+            </a>
+            <div class="nav-dropdown group-hover:block">
+              <a href="#">ប្រវត្តិសាកលវិទ្យាល័យ</a>
+
+              <!-- Nested Dropdown for មហាវិទ្យាល័យ (Faculties) -->
+              <div class="nav-dropdown-item-parent">
+                <a href="#" class="flex justify-between items-center">
+                  <span>មហាវិទ្យាល័យ</span>
+                  <i class="fas fa-chevron-right text-xs ml-4"></i>
+                </a>
+                <div class="nav-sub-dropdown">
+                  <a href="#">មហាវិទ្យាល័យ IT</a>
+                  <a href="#">មហាវិទ្យាល័យ IR</a>
+                  <a href="#">មហាវិទ្យាល័យ LAW</a>
+                </div>
+              </div>
+              <!-- End Nested Dropdown -->
+
+              <a href="#">ចក្ខុវិស័យ និង បេសកកម្ម</a>
+              <a href="#">រចនាសម្ព័ន្ធគ្រប់គ្រង</a>
+              <a href="#">បុគ្គលិក និង សាស្ត្រាចារ្យ</a>
+            </div>
+          </div>
+
+          <!-- Dropdown for ព័ត៌មាន (News) - បានដាក់ active-nav នៅទីនេះ -->
+          <div class="relative group nav-item-wrapper">
+            <a
+              href="news.html"
+              class="nav-link flex items-center space-x-1 active-nav"
+            >
+              <span>ព័ត៌មាន</span>
+              <i class="fas fa-chevron-down text-xs ml-1"></i>
+            </a>
+            <div class="nav-dropdown group-hover:block">
+              <a href="#">ព័ត៌មានថ្មីៗ</a>
+              <a href="#">ព្រឹត្តិការណ៍</a>
+              <a href="#">សេចក្តីប្រកាស</a>
+            </div>
+          </div>
+
           <a href="documents.html" class="nav-link">ឯកសារ</a>
           <a href="publication.html" class="nav-link">ផ្សព្វផ្សាយ</a>
           <a href="contact.html" class="nav-link">ទំនាក់ទំនង</a>
