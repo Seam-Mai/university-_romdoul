@@ -41,7 +41,6 @@
       .nav-link:hover {
         background-color: #083c6c;
       }
-      /* សម្រាប់ធាតុដែលជា Dropdown Parent, ត្រូវការកែសម្រួល padding បន្តិច ព្រោះធាតុ Nav Link មិនមែនជា Block ពេញលេញទៀតទេ */
       .nav-item-wrapper {
         border-right: 1px solid rgba(255, 255, 255, 0.1);
       }
@@ -182,7 +181,7 @@
         </div>
       </header>
 
-      <!-- Navigation - ត្រូវបានកែប្រែដើម្បីបន្ថែម Nested Dropdown -->
+      <!-- Navigation Nested Dropdown -->
       <nav class="header-bg shadow-lg">
         <div class="flex text-sm">
           <a href="index.html" class="nav-link active-nav">ទំព័រដើម</a>
@@ -258,7 +257,7 @@
           <div class="relative overflow-hidden rounded-lg shadow-lg">
             <img
               id="main-image"
-              src="https://picsum.photos/1000/500?random=4"
+              src="img/cost01.jpg"
               alt="Article Image"
               class="w-full h-auto object-cover"
             />
@@ -277,32 +276,32 @@
           </div>
           <div class="flex space-x-3 mt-4 overflow-x-auto justify-start">
             <img
-              src="img/education-technology-trends-scaled.jpg"
+              src="img/cost10.jpg"
               onclick="changeImage(0)"
               class="thumbnail w-24 h-16 object-cover rounded-md border-2 border-transparent hover:border-[#0d47a1] cursor-pointer shadow-sm transition-all"
             />
             <img
-              src="https://picsum.photos/120/80?random=3"
+              src="img/cost11.jpg"
               onclick="changeImage(1)"
               class="thumbnail w-24 h-16 object-cover rounded-md border-2 border-transparent hover:border-[#0d47a1] cursor-pointer shadow-sm transition-all"
             />
             <img
-              src="https://picsum.photos/120/80?random=4"
+              src="img/cost12.jpg"
               onclick="changeImage(2)"
               class="thumbnail w-24 h-16 object-cover rounded-md border-2 border-transparent hover:border-[#0d47a1] cursor-pointer shadow-sm transition-all active-thumbnail"
             />
             <img
-              src="https://picsum.photos/120/80?random=5"
+              src="img/cost13.jpg"
               onclick="changeImage(3)"
               class="thumbnail w-24 h-16 object-cover rounded-md border-2 border-transparent hover:border-[#0d47a1] cursor-pointer shadow-sm transition-all"
             />
             <img
-              src="https://picsum.photos/120/80?random=6"
+              src="img/cost08.jpg"
               onclick="changeImage(4)"
               class="thumbnail w-24 h-16 object-cover rounded-md border-2 border-transparent hover:border-[#0d47a1] cursor-pointer shadow-sm transition-all"
             />
             <img
-              src="https://picsum.photos/120/80?random=7"
+              src="img/cost09.jpg"
               onclick="changeImage(5)"
               class="thumbnail w-24 h-16 object-cover rounded-md border-2 border-transparent hover:border-[#0d47a1] cursor-pointer shadow-sm transition-all"
             />
@@ -360,7 +359,7 @@
               class="col-span-1 group cursor-pointer p-2 rounded-lg hover:shadow-lg transition-shadow"
             >
               <img
-                src="https://picsum.photos/200/120?random=8"
+                src="img/cost07.jpg"
                 alt="News"
                 class="w-full h-auto object-cover mb-2 rounded-md group-hover:opacity-90 transition-opacity"
               />
@@ -374,7 +373,7 @@
               class="col-span-1 group cursor-pointer p-2 rounded-lg hover:shadow-lg transition-shadow"
             >
               <img
-                src="https://picsum.photos/200/120?random=9"
+                src="img/cost02.jpg"
                 alt="News"
                 class="w-full h-auto object-cover mb-2 rounded-md group-hover:opacity-90 transition-opacity"
               />
@@ -388,7 +387,7 @@
               class="col-span-1 group cursor-pointer p-2 rounded-lg hover:shadow-lg transition-shadow"
             >
               <img
-                src="https://picsum.photos/200/120?random=10"
+                src="img/cost04.jpg"
                 alt="News"
                 class="w-full h-auto object-cover mb-2 rounded-md group-hover:opacity-90 transition-opacity"
               />
@@ -402,7 +401,7 @@
               class="col-span-1 group cursor-pointer p-2 rounded-lg hover:shadow-lg transition-shadow"
             >
               <img
-                src="https://picsum.photos/200/120?random=11"
+                src="img/cost05.jpg"
                 alt="News"
                 class="w-full h-auto object-cover mb-2 rounded-md group-hover:opacity-90 transition-opacity"
               />
@@ -416,7 +415,7 @@
               class="col-span-1 group cursor-pointer p-2 rounded-lg hover:shadow-lg transition-shadow"
             >
               <img
-                src="https://picsum.photos/200/120?random=12"
+                src="img/cost06.jpg"
                 alt="News"
                 class="w-full h-auto object-cover mb-2 rounded-md group-hover:opacity-90 transition-opacity"
               />
@@ -537,12 +536,12 @@
 
     <script>
       const images = [
-        "img/education-technology-trends-scaled.jpg",
-        "img/01.jpg",
-        "img/02.jpg",
-        "https://picsum.photos/1000/500?random=5",
-        "https://picsum.photos/1000/500?random=6",
-        "https://picsum.photos/1000/500?random=7",
+        "img/cost10.jpg",
+        "img/cost11.jpg",
+        "img/cost12.jpg",
+        "img/cost13.jpg",
+        "img/cost08.jpg",
+        "img/cost09.jpg",
       ];
       let currentIndex = 2;
 
