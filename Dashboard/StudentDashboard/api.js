@@ -41,6 +41,21 @@ export const API = {
       },
     );
   },
+  async getAllFeedback() {
+    return (
+      (await fetchWithErrorHandling(`${API_BASE_URL}/api/v1/student-grades`)) ||
+      []
+    );
+  },
+  async getFeedback() {
+    return this.getAllFeedback();
+  },
+  async getAnalysis() {
+    return (
+      (await fetchWithErrorHandling(`${API_BASE_URL}/api/attendance`)) || []
+    );
+  },
+
   async getAllCourses() {
     return (
       (await fetchWithErrorHandling(`${API_BASE_URL}/api/courses/getAll`)) || []
