@@ -513,7 +513,7 @@
         // 1. Fetch data for dropdowns
         const [courses, students] = await Promise.all([
           AdminAPI.getCourses(),
-          AdminAPI.getStudents(), // Assuming you have this method
+          AdminAPI.getStudents(),
         ]);
 
         return `

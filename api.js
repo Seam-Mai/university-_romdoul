@@ -1,4 +1,4 @@
-const BASE_URL = "http://206.189.94.76:8080";
+const BASE_URL = "http://localhost:8080";
 
 const AdminAPI = {
   config: {
@@ -39,38 +39,13 @@ const AdminAPI = {
     return AdminAPI._simulateDelay(data);
   },
 
-  // --- TRANSACTIONS (Fixed the [...] error) ---
-  getTransactions: async () => {
-    const data = [
-      {
-        id: "TXN-01",
-        user: "Alex Doe",
-        type: "Tuition",
-        amount: 450.0,
-        status: "Completed",
-        date: "Today",
-        method: "KHQR",
-      },
-      {
-        id: "TXN-02",
-        user: "John Wick",
-        type: "Course Fee",
-        amount: 120.0,
-        status: "Pending",
-        date: "Yesterday",
-        method: "Cash",
-      },
-    ];
-    return AdminAPI._simulateDelay(data);
-  },
-
-  // --- REAL DATABASE CALLS (Spring Boot) ---
-  getStudents: async () => {
+ getStudents: async () => {
     try {
       const res = await fetch(`${BASE_URL}/api/students`);
-      if (!res.ok) throw new Error("Failed to fetch students");
+      if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
       return await res.json();
     } catch (err) {
+      console.error("Fetch failed. Detailed Error:", err);
       console.error("Using fallback mock users");
       return [
         { id: 1, name: "Alex Doe" },
@@ -78,7 +53,6 @@ const AdminAPI = {
       ];
     }
   },
-
   getCourses: async () => {
     try {
       const res = await fetch(`${BASE_URL}/api/courses`);
