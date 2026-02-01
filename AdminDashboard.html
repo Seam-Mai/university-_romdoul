@@ -1,0 +1,825 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Console - University Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f3f4f6;
+      }
+
+      /* Smooth transitions */
+      .transition-all-300 {
+        transition: all 0.3s ease-in-out;
+      }
+
+      /* Sidebar Active State */
+      .sidebar-item.active {
+        background: #1f2937;
+        color: white;
+        border-right: 4px solid #6366f1;
+      }
+      .sidebar-item {
+        color: #9ca3af;
+      }
+      .sidebar-item:hover:not(.active) {
+        background: #374151;
+        color: white;
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+      }
+
+      /* Modal Animation */
+      .modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+        justify-content: center;
+        align-items: center;
+      }
+      .modal.show {
+        display: flex;
+        animation: fadeIn 0.2s ease-out forwards;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      /* Table styling */
+      tr:nth-child(even) {
+        background-color: #f9fafb;
+      }
+      tr:hover {
+        background-color: #f3f4f6;
+      }
+    </style>
+  </head>
+  <body class="text-gray-800 h-screen flex overflow-hidden">
+    <!-- ================= Sidebar ================= -->
+    <aside
+      class="w-64 bg-gray-900 text-white flex flex-col transition-all duration-300 z-50 flex-shrink-0"
+    >
+      <!-- Logo -->
+      <div
+        class="h-16 flex items-center px-6 border-b border-gray-800 bg-gray-900"
+      >
+        <div class="bg-indigo-600 p-1.5 rounded mr-3">
+          <i class="fas fa-university text-white text-lg"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-lg tracking-wide">UniPortal</h1>
+          <p class="text-[10px] text-gray-400 uppercase tracking-wider">
+            Admin Console
+          </p>
+        </div>
+      </div>
+
+      <!-- User Profile Snippet (Sidebar) -->
+      <div class="p-6 border-b border-gray-800 flex items-center gap-3">
+        <img
+          src="https://ui-avatars.com/api/?name=Admin+User&background=6366f1&color=fff"
+          class="w-10 h-10 rounded-full border-2 border-gray-700"
+        />
+        <div class="overflow-hidden">
+          <p class="text-sm font-semibold truncate">System Admin</p>
+          <div class="flex items-center gap-1">
+            <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <p class="text-xs text-gray-400">Online</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="flex-1 overflow-y-auto py-4 space-y-1">
+        <p
+          class="px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2"
+        >
+          Main
+        </p>
+
+        <div
+          onclick="window.switchView('dashboard')"
+          class="sidebar-item active flex items-center px-6 py-3 cursor-pointer"
+          data-target="dashboard"
+        >
+          <i class="fas fa-chart-line w-6 text-center mr-2"></i
+          ><span>Overview</span>
+        </div>
+        <div
+          onclick="window.switchView('users')"
+          class="sidebar-item flex items-center px-6 py-3 cursor-pointer"
+          data-target="users"
+        >
+          <i class="fas fa-users w-6 text-center mr-2"></i
+          ><span>User Management</span>
+        </div>
+        <div
+          onclick="window.switchView('courses')"
+          class="sidebar-item flex items-center px-6 py-3 cursor-pointer"
+          data-target="courses"
+        >
+          <i class="fas fa-graduation-cap w-6 text-center mr-2"></i
+          ><span>Courses & Classes</span>
+        </div>
+
+        <p
+          class="px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 mt-6"
+        >
+          Finance
+        </p>
+
+        <div
+          onclick="window.switchView('finance')"
+          class="sidebar-item flex items-center px-6 py-3 cursor-pointer"
+          data-target="finance"
+        >
+          <i class="fas fa-wallet w-6 text-center mr-2"></i
+          ><span>Transactions</span>
+        </div>
+        <div
+          onclick="window.switchView('invoices')"
+          class="sidebar-item flex items-center px-6 py-3 cursor-pointer"
+          data-target="invoices"
+        >
+          <i class="fas fa-file-invoice-dollar w-6 text-center mr-2"></i
+          ><span>Invoices</span>
+        </div>
+
+        <p
+          class="px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 mt-6"
+        >
+          System
+        </p>
+
+        <div
+          onclick="window.switchView('reports')"
+          class="sidebar-item flex items-center px-6 py-3 cursor-pointer"
+          data-target="reports"
+        >
+          <i class="fas fa-file-alt w-6 text-center mr-2"></i
+          ><span>Reports</span>
+        </div>
+        <div
+          onclick="window.switchView('settings')"
+          class="sidebar-item flex items-center px-6 py-3 cursor-pointer"
+          data-target="settings"
+        >
+          <i class="fas fa-cogs w-6 text-center mr-2"></i><span>Settings</span>
+        </div>
+      </nav>
+
+      <!-- Logout -->
+      <div class="p-4 border-t border-gray-800">
+        <button
+          onclick="logout()"
+          class="flex items-center w-full px-4 py-2 text-sm font-medium text-red-400 rounded-lg hover:bg-gray-800 hover:text-red-300 transition-colors"
+        >
+          <i class="fas fa-sign-out-alt w-6 text-center mr-2"></i>
+          Logout
+        </button>
+      </div>
+    </aside>
+
+    <!-- ================= Main Content ================= -->
+    <div class="flex-1 flex flex-col h-screen overflow-hidden bg-gray-50">
+      <!-- Top Navbar -->
+      <header
+        class="h-16 bg-white shadow-sm border-b border-gray-200 flex items-center justify-between px-8 z-10"
+      >
+        <h2 id="pageTitle" class="text-xl font-bold text-gray-800">Overview</h2>
+
+        <div class="flex items-center space-x-6">
+          <!-- Search -->
+          <div class="relative hidden md:block">
+            <span
+              class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400"
+            >
+              <i class="fas fa-search"></i>
+            </span>
+            <input
+              type="text"
+              class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-64 sm:text-sm"
+              placeholder="Global Search..."
+            />
+          </div>
+
+          <!-- Notifications -->
+          <button
+            class="relative text-gray-500 hover:text-indigo-600 transition"
+          >
+            <i class="far fa-bell text-xl"></i>
+            <span
+              class="absolute -top-1 -right-1 h-4 w-4 bg-red-500 rounded-full flex items-center justify-center text-[10px] text-white font-bold border-2 border-white"
+              >5</span
+            >
+          </button>
+
+          <!-- Quick Action -->
+          <button
+            class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition flex items-center"
+          >
+            <i class="fas fa-plus mr-2"></i> New User
+          </button>
+        </div>
+      </header>
+
+      <!-- Content View -->
+      <main
+        id="mainContent"
+        class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-8"
+      >
+        <!-- Injected via JS -->
+      </main>
+    </div>
+
+    <!-- ================= Modals Container ================= -->
+    <div id="modal-container"></div>
+
+    <!-- ================= SCRIPTS ================= -->
+    <script src="api.js"></script>
+
+    <script>
+      // =========================================================
+      // VIEW RENDERERS (Using the imported AdminAPI)
+      // =========================================================
+
+      // --- DASHBOARD OVERVIEW ---
+      const renderDashboard = async () => {
+        const data = await AdminAPI.getStats();
+
+        // Generate Alert HTML
+        const alertsHtml = data.alerts
+          .map(
+            (a) => `
+           <div class="flex items-start gap-3">
+              <div class="bg-${a.type === "danger" ? "red" : a.type === "warning" ? "yellow" : "blue"}-100 p-2 rounded-full text-${a.type === "danger" ? "red" : a.type === "warning" ? "yellow" : "blue"}-600 text-xs">
+                <i class="fas fa-${a.type === "danger" ? "exclamation" : "info"}"></i>
+              </div>
+              <div>
+                <p class="text-sm font-semibold text-gray-800">${a.title}</p>
+                <p class="text-xs text-gray-500">${a.desc}</p>
+                <p class="text-[10px] text-gray-400 mt-1">${a.time}</p>
+              </div>
+            </div>
+        `,
+          )
+          .join("");
+
+        return `
+          <!-- KPI Cards -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 fade-in">
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium text-gray-500">Total Students</p>
+                <h3 class="text-2xl font-bold text-gray-800 mt-1">${data.students.toLocaleString()}</h3>
+                <p class="text-xs text-green-600 mt-1"><i class="fas fa-arrow-up"></i> 12% vs last month</p>
+              </div>
+              <div class="bg-blue-50 p-3 rounded-lg text-blue-600"><i class="fas fa-user-graduate text-xl"></i></div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium text-gray-500">Total Revenue</p>
+                <h3 class="text-2xl font-bold text-gray-800 mt-1">$${(data.revenue / 1000000).toFixed(2)}M</h3>
+                <p class="text-xs text-green-600 mt-1"><i class="fas fa-arrow-up"></i> 5.4% vs last month</p>
+              </div>
+              <div class="bg-green-50 p-3 rounded-lg text-green-600"><i class="fas fa-dollar-sign text-xl"></i></div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium text-gray-500">Active Faculty</p>
+                <h3 class="text-2xl font-bold text-gray-800 mt-1">${data.staff}</h3>
+                <p class="text-xs text-gray-500 mt-1">Across 12 Depts</p>
+              </div>
+              <div class="bg-purple-50 p-3 rounded-lg text-purple-600"><i class="fas fa-chalkboard-teacher text-xl"></i></div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium text-gray-500">System Health</p>
+                <h3 class="text-2xl font-bold text-gray-800 mt-1">${data.serverHealth}</h3>
+                <p class="text-xs text-green-600 mt-1">All systems operational</p>
+              </div>
+              <div class="bg-orange-50 p-3 rounded-lg text-orange-600"><i class="fas fa-server text-xl"></i></div>
+            </div>
+          </div>
+
+          <!-- Charts Section -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 fade-in">
+            <!-- Main Graph -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 lg:col-span-2">
+              <div class="flex justify-between items-center mb-6">
+                <h3 class="font-bold text-gray-800">Revenue & Enrollment Analytics</h3>
+                <select class="bg-gray-50 border border-gray-200 text-sm rounded-lg p-2 outline-none">
+                  <option>This Year</option>
+                  <option>Last Year</option>
+                </select>
+              </div>
+              <div class="h-64">
+                <canvas id="revenueChart"></canvas>
+              </div>
+            </div>
+
+            <!-- Side List -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+              <div class="flex justify-between items-center mb-4">
+                  <h3 class="font-bold text-gray-800">System Alerts</h3>
+                  <span class="bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full">${data.alerts.length} New</span>
+              </div>
+              <div class="space-y-4">
+                ${alertsHtml}
+              </div>
+            </div>
+          </div>
+        `;
+      };
+
+      // --- USER MANAGEMENT ---
+      const renderUsers = async () => {
+        const users = await AdminAPI.getUsers();
+        return `
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden fade-in">
+            <div class="p-5 border-b border-gray-100 flex justify-between items-center bg-white">
+              <h3 class="font-bold text-gray-800">User Directory</h3>
+              <div class="flex gap-2">
+                <button class="px-3 py-1.5 border rounded text-sm hover:bg-gray-50"><i class="fas fa-filter mr-1"></i> Filter</button>
+                <button class="px-3 py-1.5 border rounded text-sm hover:bg-gray-50"><i class="fas fa-download mr-1"></i> Export</button>
+              </div>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead class="bg-gray-50 text-xs uppercase text-gray-500">
+                  <tr>
+                    <th class="p-4 font-semibold">User</th>
+                    <th class="p-4 font-semibold">Role</th>
+                    <th class="p-4 font-semibold">Status</th>
+                    <th class="p-4 font-semibold">Joined Date</th>
+                    <th class="p-4 font-semibold text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 text-sm">
+                  ${users
+                    .map(
+                      (u) => `
+                    <tr class="group hover:bg-indigo-50/30 transition">
+                      <td class="p-4">
+                        <div class="flex items-center gap-3">
+                          <img src="https://ui-avatars.com/api/?name=${u.name}&background=random&color=fff&size=32" class="w-8 h-8 rounded-full">
+                          <div>
+                            <p class="font-bold text-gray-800">${u.name}</p>
+                            <p class="text-xs text-gray-500">${u.email}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="p-4"><span class="px-2 py-1 bg-gray-100 rounded text-xs font-medium text-gray-600">${u.role}</span></td>
+                      <td class="p-4">
+                        <span class="px-2 py-1 rounded-full text-xs font-bold 
+                          ${
+                            u.status === "Active"
+                              ? "bg-green-100 text-green-700"
+                              : u.status === "Suspended"
+                                ? "bg-red-100 text-red-700"
+                                : "bg-yellow-100 text-yellow-700"
+                          }">
+                          ${u.status}
+                        </span>
+                      </td>
+                      <td class="p-4 text-gray-500">${u.joined}</td>
+                      <td class="p-4 text-right">
+                        <button class="text-gray-400 hover:text-indigo-600 px-2"><i class="fas fa-edit"></i></button>
+                        <button class="text-gray-400 hover:text-red-600 px-2"><i class="fas fa-trash"></i></button>
+                      </td>
+                    </tr>
+                  `,
+                    )
+                    .join("")}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `;
+      };
+
+      // --- FINANCE ---
+      const renderFinance = async () => {
+        const txns = await AdminAPI.getTransactions();
+        const stats = await AdminAPI.getInvoiceStats();
+
+        return `
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 fade-in">
+             <div class="bg-indigo-600 text-white rounded-xl shadow-lg p-6 relative overflow-hidden">
+                <div class="absolute right-0 top-0 w-32 h-32 bg-white opacity-10 rounded-full -mr-10 -mt-10"></div>
+                <p class="text-indigo-200 text-sm">Total Received</p>
+                <h3 class="text-3xl font-bold mt-1">$${stats.received.toLocaleString()}</h3>
+                <p class="text-xs mt-2 opacity-80">+15% from last month</p>
+             </div>
+             <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <p class="text-gray-500 text-sm">Outstanding Fees</p>
+                <h3 class="text-3xl font-bold text-gray-800 mt-1">$${stats.pending.toLocaleString()}</h3>
+                <p class="text-xs text-red-500 mt-2">Action Required</p>
+             </div>
+             <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <p class="text-gray-500 text-sm">Scholarships Awarded</p>
+                <h3 class="text-3xl font-bold text-gray-800 mt-1">$${stats.scholarships.toLocaleString()}</h3>
+                <p class="text-xs text-gray-400 mt-2">This semester</p>
+             </div>
+          </div>
+
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 fade-in">
+            <div class="p-5 border-b border-gray-100">
+              <h3 class="font-bold text-gray-800">Recent Transactions</h3>
+            </div>
+            <table class="w-full text-left text-sm">
+              <thead class="bg-gray-50 text-gray-500 uppercase text-xs">
+                <tr>
+                   <th class="p-4">ID</th>
+                   <th class="p-4">User</th>
+                   <th class="p-4">Type</th>
+                   <th class="p-4">Date</th>
+                   <th class="p-4">Amount</th>
+                   <th class="p-4">Status</th>
+                   <th class="p-4">Action</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                 ${txns
+                   .map(
+                     (t) => `
+                   <tr>
+                     <td class="p-4 font-mono text-xs text-gray-500">${t.id}</td>
+                     <td class="p-4 font-bold text-gray-700">${t.user}</td>
+                     <td class="p-4">${t.type} <span class="text-xs text-gray-400">(${t.method})</span></td>
+                     <td class="p-4 text-gray-500">${t.date}</td>
+                     <td class="p-4 font-bold">$${t.amount.toFixed(2)}</td>
+                     <td class="p-4">
+                        <span class="px-2 py-1 rounded text-xs font-bold ${
+                          t.status === "Completed"
+                            ? "bg-green-100 text-green-700"
+                            : t.status === "Pending"
+                              ? "bg-orange-100 text-orange-700"
+                              : "bg-red-100 text-red-700"
+                        }">${t.status}</span>
+                     </td>
+                     <td class="p-4 text-gray-400 cursor-pointer hover:text-indigo-600"><i class="fas fa-ellipsis-h"></i></td>
+                   </tr>
+                 `,
+                   )
+                   .join("")}
+              </tbody>
+            </table>
+          </div>
+        `;
+      };
+
+      // ==========================================
+      // COURSES RENDERER (Updated with Cards)
+      // ==========================================
+
+      const renderCourses = async () => {
+        // 1. Fetch data for dropdowns
+        const [courses, students] = await Promise.all([
+          AdminAPI.getCourses(),
+          AdminAPI.getStudents(), // Assuming you have this method
+        ]);
+
+        return `
+    <div class="space-y-6 fade-in">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-20 h-20 bg-indigo-50 rounded-bl-full -mr-4 -mt-4"></div>
+                <h3 class="font-bold text-gray-800 mb-4 flex items-center">
+                    <span class="bg-indigo-100 text-indigo-600 p-2 rounded-lg mr-3"><i class="fas fa-link"></i></span>
+                    Enroll Student
+                </h3>
+                <form onsubmit="handleEnroll(event)" class="space-y-4 relative z-10">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-xs font-semibold text-gray-500 uppercase">Select Student</label>
+                            <select id="enrollStudentId" class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none" required>
+                                <option value="">-- Choose Student --</option>
+                                ${students.map((s) => `<option value="${s.id}">${s.name} (ID: ${s.id})</option>`).join("")}
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-gray-500 uppercase">Select Course</label>
+                            <select id="enrollCourseCode" class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none" required>
+                                <option value="">-- Choose Course --</option>
+                                ${courses.map((c) => `<option value="${c.id}">${c.code} - ${c.name}</option>`).join("")}
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 rounded-lg transition shadow-sm text-sm">
+                        <i class="fas fa-plus-circle mr-2"></i> Confirm Enrollment
+                    </button>
+                </form>
+            </div>
+
+                <!-- CARD 2: UPDATE COURSE DETAILS -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-orange-50 rounded-bl-full -mr-4 -mt-4"></div>
+                    <h3 class="font-bold text-gray-800 mb-4 flex items-center">
+                        <span class="bg-orange-100 text-orange-600 p-2 rounded-lg mr-3"><i class="fas fa-edit"></i></span>
+                        Update Course
+                    </h3>
+                    <form onsubmit="handleUpdateCourse(event)" class="space-y-3 relative z-10">
+                        <div class="flex gap-3">
+                             <input type="text" id="updateCode" placeholder="Course Code (Target)" class="w-1/3 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 outline-none" required>
+                             <input type="text" id="updateName" placeholder="New Title" class="w-2/3 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 outline-none">
+                        </div>
+                        <div class="flex gap-3">
+                            <div class="relative w-full">
+                                <span class="absolute left-3 top-2.5 text-gray-400 text-xs"><i class="fas fa-image"></i></span>
+                                <input type="text" id="updateImg" placeholder="Icon URL (fa-class)" class="w-full pl-8 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 outline-none">
+                            </div>
+                            <div class="relative w-full">
+                                <span class="absolute left-3 top-2.5 text-gray-400 text-xs"><i class="fas fa-dollar-sign"></i></span>
+                                <input type="number" id="updatePrice" placeholder="Price" class="w-full pl-8 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-orange-500 outline-none">
+                            </div>
+                             <input type="color" id="updateColor" class="h-9 w-12 p-0 border rounded cursor-pointer" title="Pick Course Color">
+                        </div>
+                        <button type="submit" class="w-full bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 font-medium py-2 rounded-lg transition text-sm">
+                            Save Changes
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- TABLE -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="p-5 border-b border-gray-100 flex justify-between items-center bg-white">
+                    <h3 class="font-bold text-gray-800">All Courses</h3>
+                    <span class="text-xs text-gray-500">Based on 'com.romdoul.Models.Course'</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                    <thead class="bg-gray-50 text-gray-500 uppercase text-xs">
+                        <tr>
+                        <th class="p-4">Info</th>
+                        <th class="p-4">Code</th>
+                        <th class="p-4">Instructor</th>
+                        <th class="p-4">Price</th>
+                        <th class="p-4">Capacity</th>
+                        <th class="p-4">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        ${courses
+                          .map(
+                            (c) => `
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="p-4 flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded bg-${c.color || "indigo"}-100 text-${c.color || "indigo"}-600 flex items-center justify-center">
+                                        <i class="fas ${c.img || "fa-book"}"></i>
+                                    </div>
+                                    <span class="font-medium text-gray-800">${c.name}</span>
+                                </td>
+                                <td class="p-4 font-bold text-gray-500 text-xs">${c.code}</td>
+                                <td class="p-4 text-gray-600">${c.instructor || "Unassigned"}</td>
+                                <td class="p-4 font-medium text-green-600">$${(c.price || 0).toFixed(2)}</td>
+                                <td class="p-4">
+                                    <div class="w-24">
+                                        <div class="flex justify-between text-[10px] mb-1">
+                                            <span>${c.students}</span>
+                                            <span>${c.capacity || 50}</span>
+                                        </div>
+                                        <div class="w-full bg-gray-100 rounded-full h-1.5">
+                                            <div class="bg-${c.students >= c.capacity ? "red" : "indigo"}-500 h-1.5 rounded-full" style="width: ${(c.students / (c.capacity || 50)) * 100}%"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="p-4">
+                                    <span class="px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wide ${c.students >= c.capacity ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"}">
+                                        ${c.students >= c.capacity ? "Full" : "Active"}
+                                    </span>
+                                </td>
+                            </tr>
+                        `,
+                          )
+                          .join("")}
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        `;
+      };
+
+      // ==========================================
+      // LOGIC HANDLERS
+      // ==========================================
+
+      window.handleEnroll = async (e) => {
+        e.preventDefault();
+        const studentId = document.getElementById("enrollStudentId").value;
+        const courseCode = document.getElementById("enrollCourseCode").value;
+
+        // Visual Feedback
+        const btn = e.target.querySelector("button");
+        const originalText = btn.innerHTML;
+        btn.innerHTML =
+          '<i class="fas fa-circle-notch fa-spin"></i> Processing...';
+
+        try {
+          const res = await AdminAPI.enrollStudent(courseCode, studentId);
+          if (res.success) {
+            alert(res.message);
+            e.target.reset();
+            window.switchView("courses"); // Refresh list
+          }
+        } catch (error) {
+          alert("Enrollment failed");
+        } finally {
+          btn.innerHTML = originalText;
+        }
+      };
+
+      window.handleUpdateCourse = async (e) => {
+        e.preventDefault();
+        const code = document.getElementById("updateCode").value;
+
+        const data = {
+          name: document.getElementById("updateName").value,
+          img: document.getElementById("updateImg").value,
+          price: document.getElementById("updatePrice").value,
+          color: document.getElementById("updateColor").value,
+        };
+
+        // Remove empty fields
+        Object.keys(data).forEach(
+          (key) => data[key] === "" && delete data[key],
+        );
+
+        try {
+          const res = await AdminAPI.updateCourse(code, data);
+          if (res.success) {
+            alert(res.message);
+            window.switchView("courses"); // Refresh
+          }
+        } catch (error) {
+          alert("Update failed");
+        }
+      };
+
+      // --- PLACEHOLDERS ---
+      const renderPlaceholder = (title) => `
+        <div class="flex flex-col items-center justify-center h-96 text-gray-400 fade-in">
+           <i class="fas fa-tools text-5xl mb-4 opacity-20"></i>
+           <h3 class="text-xl font-bold text-gray-600">${title}</h3>
+           <p class="text-sm">This module is currently under development.</p>
+        </div>
+      `;
+
+      // =========================================================
+      // CORE LOGIC
+      // =========================================================
+
+      window.switchView = async (viewName) => {
+        // Update Sidebar UI
+        document.querySelectorAll(".sidebar-item").forEach((el) => {
+          el.classList.remove("active");
+          el.querySelector("i").classList.remove("text-indigo-500");
+        });
+        const activeItem = document.querySelector(
+          `.sidebar-item[data-target="${viewName}"]`,
+        );
+        if (activeItem) activeItem.classList.add("active");
+
+        // Update Title
+        const titles = {
+          dashboard: "System Overview",
+          users: "User Management",
+          courses: "Course Administration",
+          finance: "Financial Transactions",
+          invoices: "Invoice Management",
+          reports: "System Reports",
+          settings: "Global Settings",
+        };
+        document.getElementById("pageTitle").innerText =
+          titles[viewName] || "Dashboard";
+
+        // Render Content
+        const main = document.getElementById("mainContent");
+        main.innerHTML = `<div class="flex justify-center pt-20"><i class="fas fa-circle-notch fa-spin text-3xl text-indigo-600"></i></div>`;
+
+        try {
+          let html = "";
+          switch (viewName) {
+            case "dashboard":
+              html = await renderDashboard();
+              break;
+            case "users":
+              html = await renderUsers();
+              break;
+            case "finance":
+              html = await renderFinance();
+              break;
+            case "courses":
+              html = await renderCourses(); // Now points to the full function above
+              break;
+            default:
+              html = renderPlaceholder(titles[viewName]);
+          }
+          main.innerHTML = html;
+
+          // Initialize Charts if on dashboard
+          if (viewName === "dashboard") initDashboardChart();
+        } catch (e) {
+          console.error(e);
+          main.innerHTML = `<div class="text-red-500 p-10">Error loading view. Check console.</div>`;
+        }
+      };
+
+      async function initDashboardChart() {
+        // Fetch chart data from API
+        const chartData = await AdminAPI.getRevenueChartData();
+
+        const ctx = document.getElementById("revenueChart");
+        if (!ctx) return;
+        new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: chartData.labels,
+            datasets: [
+              {
+                label: "Revenue ($)",
+                data: chartData.revenue,
+                borderColor: "#4f46e5",
+                backgroundColor: "rgba(79, 70, 229, 0.1)",
+                tension: 0.4,
+                fill: true,
+              },
+              {
+                label: "Enrollments",
+                data: chartData.enrollments,
+                borderColor: "#10b981",
+                backgroundColor: "transparent",
+                yAxisID: "y1",
+                borderDash: [5, 5],
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: "index", intersect: false },
+            scales: {
+              y: { beginAtZero: true },
+              y1: {
+                type: "linear",
+                display: true,
+                position: "right",
+                grid: { drawOnChartArea: false },
+              },
+            },
+          },
+        });
+      }
+
+      window.logout = function () {
+        if (confirm("Sign out of Admin Console?")) {
+          alert("Logged out successfully.");
+        }
+      };
+
+      // Init
+      document.addEventListener("DOMContentLoaded", () => {
+        window.switchView("dashboard");
+      });
+    </script>
+  </body>
+</html>

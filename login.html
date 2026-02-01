@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="km">
   <head>
     <meta charset="UTF-8" />
@@ -145,6 +145,10 @@
             } else if (data.role === "STUDENT") {
               window.location.href =
                 "./Dashboard/StudentDashboard/StudentDashboard.html";
+            } else if (data.role === "ADMIN") {
+              window.location.href = "AdminDashboard.html";
+            } else {
+              window.location.href = "./index.html";
             }
           } catch (error) {
             alert("មានបញ្ហាក្នុងការចូលប្រើប្រាស់: " + error.message);
